@@ -1,33 +1,139 @@
 <!DOCTYPE html>
-<html lang="de">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Willkommen</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SMS Classifier</title>
     <style>
         body {
             font-family: Arial, sans-serif;
+            background-color: #ADD8E6;
+            color: #FFFFFF;
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
+            flex-direction: column;
+            min-height: 100vh;
             margin: 0;
-            background-color: #f0f0f0;
+            position: relative;
         }
-        .container {
-            text-align: center;
-            background-color: white;
+        .sms-container {
+            width: 90%;
+            max-width: 500px;
+            background-color: #2E8B57;
             padding: 20px;
             border-radius: 10px;
             box-shadow: 0 4px 6px rgba(0,0,0,0.1);
         }
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 15px;
+        }
+        .form-group label {
+            margin-bottom: 5px;
+        }
+        .form-group textarea {
+            padding: 10px;
+            border: none;
+            border-radius: 4px;
+            width: 90%;
+            height: 60px;
+            resize: none;
+        }
+        .sms-entry {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            border-bottom: 1px solid #20B2AA;
+        }
+        .sms-entry:last-child {
+            border-bottom: none;
+        }
+        .sms-text {
+            flex-grow: 1;
+            margin-right: 10px;
+        }
+        .sms-status {
+            font-size: 1.5em;
+        }
+        .sms-status.ham {
+            color: #F4A460;
+        }
+        .sms-status.spam {
+            color: #FF6347;
+        }
+        .button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #20B2AA;
+            color: #FFFFFF;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+            text-align: center;
+            display: inline-block;
+        }
+        .button:hover {
+            background-color: #3CB371;
+        }
+        .username {
+            position: absolute;
+            top: 10px;
+            right: 20px;
+            font-size: 1em;
+            color: #FFFFFF;
+        }
     </style>
+    <script>
+        window.onload = function() {
+            document.getElementById("sms_text").focus();
+            document.getElementById("sms_text").addEventListener("keydown", function(event) {
+                if (event.key === "Enter") {
+                    event.preventDefault(); // Prevent newline
+                    document.querySelector("form").submit(); // Submit form
+                }
+            });
+        };
+    </script>
 </head>
 <body>
-    <div class="container">
-        <h1>Ciao!</h1>
-        <p>Siamo due personne</p>
-        <h2>{{ person1 }} e {{ person2 }}</h2>
-        <p>Schön, dass ihr hier seid!</p>
+    <div class="username">
+        Logged in as: {{ username }}
+    </div>
+    <div class="sms-container">
+        <h1>Welcome, {{ person1 }} and {{ person2 }}!</h1>
+        
+        <div>
+            <p>Spam: {{ spam_count }} / {{ total_sms }} ({{ spam_percentage }}%)</p>
+        </div>
+
+        <form method="POST">
+            <div class="form-group">
+                <label for="sms_text">Enter SMS:</label>
+                <textarea id="sms_text" name="sms_text" required></textarea>
+            </div>
+            <button type="submit" class="button">Classify</button>
+        </form>
+
+        {% for sms, classification in sms_log %}
+            <div class="sms-entry">
+                <div class="sms-text">{{ sms }}</div>
+                <div class="sms-status {{ classification }}">
+                    {% if classification == 'ham' %}
+                        ✔️
+                    {% else %}
+                        ❌
+                    {% endif %}
+                </div>
+            </div>
+        {% endfor %}
+
+        <a href="/export" class="button">Download CSV</a>
+        <a href="/delete_history" class="button">Delete History</a>
+        <a href="/logout" class="button">Logout</a>
     </div>
 </body>
 </html>
