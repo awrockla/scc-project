@@ -1,5 +1,3 @@
-RUN echo "Building the Docker image for SMS Spam Detector..."
-
 # Base Image
 FROM python:3.10.12
 
