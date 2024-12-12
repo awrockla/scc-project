@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="sms-spam-collection-dataset">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/ML/sms-spam-collection-dataset.zip!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
