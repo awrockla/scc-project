@@ -1,0 +1,10 @@
+<component name="libraryTable">
+  <library name="arch">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/ML/arch/email-spam-classification-dataset-csv.zip!/" />
+      <root url="jar://$PROJECT_DIR$/ML/arch/sms-spam-dataset.zip!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
