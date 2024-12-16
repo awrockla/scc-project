@@ -1,7 +1,3 @@
 .venv
 .DS_Store
-<<<<<<< HEAD
-.env
-=======
 .idea
->>>>>>> f73838c (gitignoresutff)
