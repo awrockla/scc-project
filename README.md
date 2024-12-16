@@ -1,12 +1,12 @@
 # scc-project
 Project:
 
-run this app with command:
+run this app with command (careful! the python version should be given within the container or the virtual environment):
 - python3 app/app.py
 
-run docker-container:
+run docker-container (**sudo** is not needed - at least not on mac):
 1. build the container: sudo docker build -t sms-spam-detector-webapp .
-2. run the container: sudo docker run -d --name sms-spam-detector-container -p 5000:5000 sms-spam-detector-webapp
+2. run the container: sudo docker run -d --name sms-spam-detector-container -p 5005:5000 sms-spam-detector-webapp
 
 Check if Container is running with: docker ps
 

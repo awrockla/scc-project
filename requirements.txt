@@ -1,2 +1,13 @@
 flask
 flask-login
+numpy==1.23.5
+pandas==1.5.3
+scikit-learn==1.2.2
+xgboost==1.7.6
+joblib==1.2.0
+nltk==3.8.1
+gunicorn==21.1.0  # Optional, for deploying Flask on a production server
+matplotlib==3.7.1
+seaborn==0.12.2
+wordcloud==1.8.2.2
+pillow==9.5.0
