@@ -5,7 +5,10 @@ run this app with command (careful! the python version should be given within th
 - python3 app/app.py
 
 run docker-container (**sudo** is not needed - at least not on mac):
-1. build the container: sudo docker build -t sms-spam-detector-webapp .
+1. build the container: sudo docker buildx build -t sms-spam-detector-webapp .
+<b>
+1.1: alternativ (empfohlen!) Build: docker build --pull . -t sms-spam-detector-webapp:latest
+</b>
 2. run the container: sudo docker run -d --name sms-spam-detector-container -p 5005:5000 sms-spam-detector-webapp
 
 Check if Container is running with: docker ps
