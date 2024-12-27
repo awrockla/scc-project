@@ -1,19 +1,72 @@
-# scc-project
-Project:
+# SCC Project
 
-run this app with command (careful! the python version should be given within the container or the virtual environment):
-- python3 app/app.py
+## Project Overview
+Run this app using the following command. Ensure that the Python version is compatible within the container or virtual environment:
+```bash
+python3 app/app.py
+```
 
-run docker-container (**sudo** is not needed - at least not on mac):
-1. build the container: sudo docker buildx build -t sms-spam-detector-webapp .
-<b>
-1.1: alternativ (empfohlen!) Build: docker build --pull . -t sms-spam-detector-webapp:latest
-</b>
-2. run the container: sudo docker run -d --name sms-spam-detector-container -p 5005:5000 sms-spam-detector-webapp
+---
 
-Check if Container is running with: docker ps
+## Docker
 
-More usefull commands:
-- sudo docker rm sms-spam-detector-container (remove old container)
-- sudo docker image prune -f (remove old images)
-- sudo docker build --no-cache -t sms-spam-detector-webapp . (build without cache)
+Run the Docker container (**sudo** is not needed on macOS):
+
+1. **Build the container:**
+   ```bash
+   sudo docker buildx build -t sms-spam-detector-webapp .
+   ```
+   
+   **Alternative (recommended!) Build:**
+   ```bash
+   docker build --pull . -t sms-spam-detector-webapp:latest
+   ```
+
+2. **Run the container:**
+   ```bash
+   sudo docker run -d --name sms-spam-detector-container -p 5005:5000 sms-spam-detector-webapp
+   ```
+
+### Check if the Container is Running
+```bash
+docker ps
+```
+
+### Useful Docker Commands
+- **Remove old container:**
+  ```bash
+  sudo docker rm sms-spam-detector-container
+  ```
+- **Remove old images:**
+  ```bash
+  sudo docker image prune -f
+  ```
+- **Build without cache:**
+  ```bash
+  sudo docker build --no-cache -t sms-spam-detector-webapp .
+  ```
+
+---
+
+## Kubernetes
+
+1. **Create Deployment:**
+   ```bash
+   kubectl apply -f kubernetes/deployment.yaml
+   ```
+2. **Expose Deployment:**
+   ```bash
+   kubectl expose deployment sms-spam-detector-webapp --type=LoadBalancer --port=5000
+   ```
+3. **Create Tunnel:**
+   ```bash
+   minikube service sms-spam-detector-webapp 
+   ```
+
+### Useful Kubernetes Commands
+- **Dashboard:** minikube dashboard
+- **View Pods/Services/Deployments:** kubectl get deployments/pods/services
+- **Read Logs:** kubectl logs "id"
+- **Describe:** kubectl describe "type" "id"
+
+---

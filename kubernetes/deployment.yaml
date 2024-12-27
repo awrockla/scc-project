@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sms-spam-detector-webapp
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: sms-spam-detector-webapp
+  template:
+    metadata:
+      labels:
+        app: sms-spam-detector-webapp
+    spec:
+      containers:
+        - name: sms-spam-detector-webapp
+          image: aouni/sms-spam-detector-webapp:latest
+          ports:
+            - containerPort: 5000
