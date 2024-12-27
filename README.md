@@ -60,10 +60,17 @@ docker ps
    ```
 3. **Create Tunnel:**
    ```bash
-   minikube service sms-spam-detector-webapp 
+   minikube service sms-spam-detector-webapp
+   ```
+   
+4. **Start autoscaling:**
+   ```bash
+   kubectl autoscale deployment sms-spam-detector-webapp  --cpu-percent=50 --min=1 --max=10
    ```
 
+
 ### Useful Kubernetes Commands
+- **Minikube start:** minikube start/stop
 - **Dashboard:** minikube dashboard
 - **View Pods/Services/Deployments:** kubectl get deployments/pods/services
 - **Read Logs:** kubectl logs "id"

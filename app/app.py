@@ -38,19 +38,27 @@ def load_user(user_id):
     return None
 
 @app.route("/login", methods=["GET", "POST"])
-def login():
-    error = None
+def login_template():
     if request.method == "POST":
-        username = request.form.get("username")
-        password = request.form.get("password")
-        user = users.get(username)
-        if user and user.password == password:
-            login_user(user)
-            session.permanent = False  # Session will expire when the browser is closed
-            return redirect(url_for("hello_world"))
+        error = login(request)
+        if error is not None:
+            return render_template("login.html", error=error)
         else:
-            error = "Invalid username or password"
-    return render_template("login.html", error=error)
+            return redirect(url_for("hello_world"))
+
+    elif request.method == "GET":
+        return render_template("login.html", error=None)
+
+def login(login_request):
+    username = login_request.form.get("username")
+    password = login_request.form.get("password")
+    user = users.get(username)
+    if user and user.password == password:
+        login_user(user)
+        session.permanent = False  # Session will expire when the browser is closed
+        return None
+    else:
+        return "Invalid username or password"
 
 @app.route("/logout")
 @login_required
@@ -61,6 +69,7 @@ def logout():
 @app.route("/", methods=["GET", "POST"])
 @login_required
 def hello_world():
+
     user_id = str(current_user.id)
     username = current_user.username
     if f'sms_log_{user_id}' not in session:
@@ -70,7 +79,7 @@ def hello_world():
         sms_text = request.form.get("sms_text")
         classification = classify_sms(sms_text)
         session[f'sms_log_{user_id}'].insert(0, (sms_text, classification))
-        session.modified = True        
+        session.modified = True
         return redirect(url_for("hello_world"))  # Redirect after POST
 
 
@@ -122,6 +131,11 @@ def delete_history():
     session[f'sms_log_{user_id}'] = []
     session.modified = True
     return redirect(url_for("hello_world"))
+
+@app.route("/api/classification", methods=["POST"])
+def classify_sms_api():
+    return classify_sms(request.json.get("sms_text"))
+
 
 if __name__ == "__main__":
     app.run(debug=True, host='0.0.0.0')
