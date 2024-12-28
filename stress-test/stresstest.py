@@ -8,11 +8,20 @@ import pandas as pd
 
 from random import randrange
 
-async def stress_test(url, data, output):
+
+async def stress_test(url, num, output, interval, duration):
     results = []
-    async with aiohttp.ClientSession() as session:
-        tasks = [send_request(session, url, {"sms_text": d}, results) for d in data]
-        await asyncio.gather(*tasks)
+    end_time = asyncio.get_event_loop().time() + duration  # Endzeit berechnen
+
+    while asyncio.get_event_loop().time() < end_time:
+        async with aiohttp.ClientSession() as session:
+            tasks = [send_request(session, url, {"sms_text": d}, results) for d in generate_input(num)]
+            await asyncio.gather(*tasks)
+
+        print(f"Batch complete. Waiting {interval} seconds...")
+        await asyncio.sleep(interval)  # Wartezeit zwischen den Anfragen
+
+    print("All requests completed.")
 
     # Write results to CSV
 
@@ -24,25 +33,29 @@ async def stress_test(url, data, output):
         writer.writeheader()
         writer.writerows(results)
 
-    print(results)
+    for result in results:
+        print()
+
+
 async def send_request(session, url, data, results):
     start_time = datetime.now()
 
     try:
         async with session.post(url, json=data) as response:
-            #das mit der Response Time nochmal überarbeiten
-            response_info = await response.text()
+            response_info = await response.json()
+
+            classification = response_info.get("classification")
+            response_time = response_info.get("response_time_in_ms")
             status = response.status
-            content = response_info.__getitem__(0)
-            response_time = response_info.__getitem__(1)
+
             results.append({
-                "url": url,
-                "status": status,
-                "sms": data.get("sms_text"),
-                "response_time": response_time,
-                "response_time_client": (datetime.now() - start_time).microseconds,
-                "content_snippet": content[:5],  # Save first 100 characters of response
-            })
+                    "url": url,
+                    "status": status,
+                    "sms": data.get("sms_text"),
+                    "response_time": response_time,
+                    "response_time_client": (datetime.now() - start_time).microseconds,
+                    "content_snippet": classification,
+                    })
 
     except Exception as e:
         response_time = (datetime.now() - start_time).total_seconds()
@@ -72,7 +85,11 @@ if __name__ == "__main__":
     target_ip = input("Enter the target IP address (or default 127.0.0.1): ") or "127.0.0.1"
     port = input("Enter the port (default 5000): ") or 5000
     num_requests = int(input("Enter the number of requests to send (default 1): ") or 1)
+    interval_input = int(input("Enter the interval (default 10): ") or 10)
+    duration_input = int(input("Enter the duration in seconds (default 60): ") or 60)
 
     # Send POST requests
-    output_csv = f"stress-test/stress_test_results-{datetime.now().time()}.csv"
-    asyncio.run(stress_test(f"http://{target_ip}:{port}/api/classification",  data=generate_input(num_requests), output=output_csv))
+    output_csv = (f"stress-test/stress_test_results-"
+                  f"-Interval:{interval_input}-Duration:{duration_input}.csv")
+    asyncio.run(stress_test(f"http://{target_ip}:{port}/api/classification",  num=num_requests, output=output_csv,
+                            interval=interval_input, duration=duration_input))
