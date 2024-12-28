@@ -40,18 +40,18 @@ def load_user(user_id):
     return None
 
 @app.route("/login", methods=["GET", "POST"])
-def login_template():
+def login():
     if request.method == "POST":
-        error = login(request)
+        error = login_logic(request)
         if error is not None:
-            return render_template("login.html", error=error)
+            return render_template('login.html', error=error)
         else:
             return redirect(url_for("hello_world"))
 
     elif request.method == "GET":
         return render_template("login.html", error=None)
 
-def login(login_request):
+def login_logic(login_request):
     username = login_request.form.get("username")
     password = login_request.form.get("password")
     user = users.get(username)
