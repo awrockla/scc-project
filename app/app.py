@@ -1,4 +1,6 @@
-from flask import Flask, render_template, request, session, send_file, redirect, url_for
+from datetime import datetime
+
+from flask import Flask, render_template, request, session, send_file, redirect, url_for, jsonify
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
 import pickle
 import os
@@ -134,8 +136,12 @@ def delete_history():
 
 @app.route("/api/classification", methods=["POST"])
 def classify_sms_api():
-    return classify_sms(request.json.get("sms_text"))
-
+    start_time = datetime.now()
+    response = {
+        "classification": classify_sms(request.json.get("sms_text")),
+        "response_time_in_ms": (datetime.now() - start_time).microseconds
+    }
+    return jsonify(response)
 
 if __name__ == "__main__":
     app.run(debug=True, host='0.0.0.0')
