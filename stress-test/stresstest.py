@@ -34,7 +34,7 @@ async def stress_test(url, num, output, interval, duration):
         writer.writerows(results)
 
     for result in results:
-        print()
+        print(result)
 
 
 async def send_request(session, url, data, results):
@@ -42,8 +42,8 @@ async def send_request(session, url, data, results):
 
     try:
         async with session.post(url, json=data) as response:
-            response_info = await response.json()
-
+            response_info = await response.text()
+            print(f"response_info:{response_info}")
             classification = response_info.get("classification")
             response_time = response_info.get("response_time_in_ms")
             status = response.status
@@ -53,15 +53,14 @@ async def send_request(session, url, data, results):
                     "status": status,
                     "sms": data.get("sms_text"),
                     "response_time": response_time,
-                    "response_time_client": (datetime.now() - start_time).microseconds,
+                    "response_time_client": ((datetime.now() - start_time).microseconds/1000),
                     "content_snippet": classification,
                     })
-
     except Exception as e:
         response_time = (datetime.now() - start_time).total_seconds()
         results.append({
             "url": url,
-            "status": "error",
+            "status": "error in request",
             "sms": data.get("sms_text"),
             "response_time": response_time,
             "response_time_client": (datetime.now() - start_time).microseconds,
