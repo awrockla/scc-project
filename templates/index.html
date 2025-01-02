@@ -79,13 +79,6 @@
         .button:hover {
             background-color: #3CB371;
         }
-        .username {
-            position: absolute;
-            top: 10px;
-            right: 20px;
-            font-size: 1em;
-            color: #FFFFFF;
-        }
     </style>
     <script>
         window.onload = function() {
@@ -100,9 +93,6 @@
     </script>
 </head>
 <body>
-    <div class="username">
-        Logged in as: {{ username }}
-    </div>
     <div class="sms-container">
         <h1>Welcome, {{ person1 }} and {{ person2 }}!</h1>
         
@@ -133,7 +123,6 @@
 
         <a href="/export" class="button">Download CSV</a>
         <a href="/delete_history" class="button">Delete History</a>
-        <a href="/logout" class="button">Logout</a>
     </div>
 </body>
 </html>
