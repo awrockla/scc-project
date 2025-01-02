@@ -45,7 +45,13 @@ docker ps
   ```bash
   sudo docker build --no-cache -t sms-spam-detector-webapp .
   ```
-
+- **Push new image to registry:**
+  ```bash
+    sudo docker tag <local-image>:<local-tag> <registry>/<repository>:<tag>
+  ```
+   ```bash
+    docker push <registry>/<repository>:<tag>
+  ``` 
 ---
 
 ## Kubernetes

@@ -139,7 +139,7 @@ def classify_sms_api():
     start_time = datetime.now()
     response = {
         "classification": classify_sms(request.json.get("sms_text")),
-        "response_time_in_ms": (datetime.now() - start_time).microseconds
+        "calculation_time_in_ms": (datetime.now() - start_time).microseconds/1000
     }
     return jsonify(response)
 

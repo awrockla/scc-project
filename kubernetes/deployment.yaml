@@ -17,3 +17,8 @@ spec:
           image: aouni/sms-spam-detector-webapp:latest
           ports:
             - containerPort: 5000
+          resources:
+            requests:
+              cpu: "200m"  # Example: 200 millicores
+            limits:
+              cpu: "500m"  # Example: 500 millicores

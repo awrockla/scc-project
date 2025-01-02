@@ -1,4 +1,4 @@
-# Base Image: Verwende ein Python-Image basierend auf Alpine
+# Base Image: use slim image
 FROM python:3.10-slim
 
 # Arbeitsverzeichnis setzen
