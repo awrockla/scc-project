@@ -21,4 +21,4 @@ spec:
             requests:
               cpu: "200m"  # Example: 200 millicores
             limits:
-              cpu: "500m"  # Example: 500 millicores
+              cpu: "600m"  # Example: 500 millicores
