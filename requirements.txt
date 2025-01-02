@@ -9,5 +9,5 @@ nltk==3.9
 gunicorn==22.0.0  # Optional, for deploying Flask on a production server
 matplotlib==3.7.1
 seaborn==0.12.2
-wordcloud==1.8.2.2
+wordcloud==1.8.2.3
 pillow==10.3.0
