@@ -46,7 +46,7 @@ calculated_result = {
     "median_calculation-time" : 0,
     "error_percentage": 0
 }
-respond_times = []
+calculations = []
 request_times = []
 request_amount = read_results.__len__()
 
@@ -54,35 +54,35 @@ error_amount = 0
 
 for row in read_results:
     request = row.get('request_time_microseconds')
-    respond_time = row.get('calculation_time_microseconds')
+    calculation = row.get('calculation_time_microseconds')
 
     if request == "error":
         error_amount += 1
     else:
         try:
-            respond_times.append(int(respond_time))
+            calculations.append(int(calculation))
             request_times.append(int(request))
         except Exception as e:
             print("Error reading respond/calculation time")
             print(e)
-            print(f"request time: {request} - calculation time: {respond_time}")
+            print(f"request time: {request} - calculation time: {calculation}")
             print("----------------------")
 
 
-average_respond = statistics.mean(respond_times) / 1000
-median_respond = statistics.median(respond_times) / 1000
-average_calculation = statistics.mean(request_times) / 1000
-median_calculation = statistics.median(request_times) / 1000
+average_respond = statistics.mean(request_times) / 1000
+median_respond = statistics.median(request_times) / 1000
+average_calculation = statistics.mean(calculations) / 1000
+median_calculation = statistics.median(calculations) / 1000
 error_percentage = error_amount / request_amount * 100
 
-min_respond = min(respond_times) / 1000
-max_respond = max(respond_times) / 1000
+min_respond = min(request_times) / 1000
+max_respond = max(request_times) / 1000
 
-min_calculation = min(request_times) / 1000
-max_calculation = max(request_times) / 1000
+min_calculation = min(calculations) / 1000
+max_calculation = max(calculations) / 1000
 
-std_respond = statistics.stdev(respond_times) / 1000
-var_respond = statistics.variance(respond_times) / 1000000
+std_respond = statistics.stdev(request_times) / 1000
+var_respond = statistics.variance(request_times) / 1000000
 
 result = {
     "average_respond": average_respond,
@@ -99,7 +99,7 @@ result = {
 }
 
 print(result)
-plt.hist([time / 1000 for time in respond_times], bins=20, edgecolor='black', range=(0, 100))
+plt.hist([time / 1000 for time in request_times], bins=20, edgecolor='black', range=(0, 100))
 plt.title("Distribution of Respond Times")
 plt.xlabel("Respond Time (ms)")
 plt.ylabel("Frequency")
