@@ -20,10 +20,10 @@ print("read files")
 # Alle Dateien im aktuellen Verzeichnis auflisten
 for filename in os.listdir(current_directory):
     file_path = os.path.join(current_directory, filename)
-
+    print("file path: ", file_path)
     # Prüfen, ob es sich um eine Datei handelt (keine Unterordner)
     if (os.path.isfile(file_path) and filename.endswith(('.txt', '.csv'))
-            and filename.startswith('stress_test-2')):
+            and filename.startswith('stress_test-3')):
 
         # Dateiinhalt lesen und in der Konsole ausgeben
         try:
@@ -31,10 +31,12 @@ for filename in os.listdir(current_directory):
                 reader = csv.DictReader(file)
                 data = [row for row in reader]  # Li
                 read_results.extend(data)
+                file_counter += 1
         except Exception as e:
             print(f"Fehler beim Lesen der Datei {filename}: {e}")
 print(f"read {file_counter} files")
-
+if(file_counter == 0):
+    exit()
 
 print("calculate informations")
 # Print the array of arrays
@@ -74,6 +76,7 @@ median_respond = statistics.median(request_times) / 1000
 average_calculation = statistics.mean(calculations) / 1000
 median_calculation = statistics.median(calculations) / 1000
 error_percentage = error_amount / request_amount * 100
+above_100ms = sum(value > 100000 for value in request_times) / len(request_times) * 100
 
 min_respond = min(request_times) / 1000
 max_respond = max(request_times) / 1000
@@ -85,6 +88,7 @@ std_respond = statistics.stdev(request_times) / 1000
 var_respond = statistics.variance(request_times) / 1000000
 
 result = {
+    "total_request": request_amount,
     "average_respond": average_respond,
     "median_respond": median_respond,
     "average_calculation": average_calculation,
@@ -94,6 +98,7 @@ result = {
     "max_respond": max_respond,
     "min_calculation": min_calculation,
     "max_calculation": max_calculation,
+    "above_100ms": above_100ms,
     "std_respond": std_respond,
     "var_respond": var_respond
 }

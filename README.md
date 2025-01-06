@@ -5,9 +5,46 @@ Run this app using the following command. Ensure that the Python version is comp
 ```bash
 python3 app/app.py
 ```
+---
+## Running the orchestrated project
+The underlying image is available under: "aouni/sms-spam-detector-webapp:latest".
+Docker should be running. Commands are applicable for linux-shell. "kind" and "kubctl" need to be installed!
+
+1. **Start The Cluster**: 
+Starting the cluster with kind to have an underlying kubernetes cluster, on which the following
+commands are executed. This cluster consists of a control-node and 2 worker nodes. 
+```
+    kind create cluster --config=kubernetes/cluster-config.yaml
+```
+2. **Apply The Metric Server**: 
+The metric server is needed to read information about the used resources of the pods. This server reads
+these information from the pods. This is needed for #5 HPA.
+```
+    kubectl create --filename kubernetes/metrics-server.yaml
+```
+3. **Apply The Deployment**: 
+This command starts the deployments. It will start 2 pods, put into one worker node.
+```
+    kubectl apply -f kubernetes/deployment.yaml
+```
+4. **Apply The Service**: 
+```
+    kubectl apply -f kubernetes/service.yaml
+```
+After this command, the application is available under the ip: 127.0.0.1:30080
+5. **Apply The HPA**: 
+The hpa scales the pods depending on the current workload. This creates automatic horizontal scaling!
+```
+    kubectl autoscale deployment sms-spam-detector-webapp  --cpu-percent=60 --min=2 --max=10
+```
+
+
+
+
+
 
 ---
-
+## Below: many useful commands that were used to setup this project
 ## Docker
 
 Run the Docker container (**sudo** is not needed on macOS):
@@ -83,3 +120,11 @@ docker ps
 - **Describe:** kubectl describe "type" "id"
 
 ---
+
+## KIND
+1. **Create Cluster:**
+   ```bash
+   kind create cluster --config=kind/cluster-config.yaml
+   ```
+
+

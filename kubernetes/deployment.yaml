@@ -19,6 +19,6 @@ spec:
             - containerPort: 5000
           resources:
             requests:
-              cpu: "200m"  # Example: 200 millicores
+              cpu: "200m"
             limits:
-              cpu: "600m"  # Example: 500 millicores
+              cpu: "600m"
