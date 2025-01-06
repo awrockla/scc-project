@@ -1,0 +1,17 @@
+apiVersion: v1
+# Indicates this as a service
+kind: Service
+metadata:
+  # Service name
+  name: sms-spam-detector-webapp
+  namespace: default
+spec:
+  type: LoadBalancer
+  selector:
+    # Selector for Pods
+    app: sms-spam-detector-webapp
+  ports:
+  # Port Map
+  - port: 5000
+    targetPort: 5000
+    nodePort: 30080

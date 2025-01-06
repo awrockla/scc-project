@@ -1,4 +1,5 @@
-from flask import Flask, render_template, request, send_file, redirect, url_for, session
+from datetime import datetime
+from flask import Flask, render_template, request, send_file, redirect, url_for, session, jsonify
 import pickle
 import os
 import csv
@@ -68,6 +69,33 @@ def delete_history():
     session['sms_log'] = []
     session.modified = True
     return redirect(url_for("hello_world"))
+
+@app.route("/api/classification", methods=["POST"])
+def classify_sms_api():
+    start_time = datetime.now()
+    response = {
+        "classification": classify_sms(request.json.get("sms_text")),
+        "calculation_time_in_ms": (datetime.now() - start_time).microseconds/1000
+    }
+    return jsonify(response)
+
+
+def has_no_empty_params(rule):
+    defaults = rule.defaults if rule.defaults is not None else ()
+    arguments = rule.arguments if rule.arguments is not None else ()
+    return len(defaults) >= len(arguments)
+
+@app.route("/site-map")
+def site_map():
+    links = []
+    for rule in app.url_map.iter_rules():
+        # Filter out rules we can't navigate to in a browser
+        # and rules that require parameters
+        if ("GET" in rule.methods or "POST" in rule.methods) and has_no_empty_params(rule):
+            url = url_for(rule.endpoint, **(rule.defaults or {}))
+            links.append((url, rule.endpoint))
+    # links is now a list of url, endpoint tuples
+    return render_template("all_links.html", links=links)
 
 if __name__ == "__main__":
     app.run(debug=True, host='0.0.0.0') # port can be changed here, if default port 5000 is used -> port=5001
